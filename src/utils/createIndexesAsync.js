@@ -14,7 +14,16 @@ const createIndexes = json => {
     return acc;
   };
 
-  return json.reduce(updateIndexForFilm, { byActor: {}, byTitle: {} });
+  const index = json.reduce(updateIndexForFilm, { byActor: {}, byTitle: {} });
+  const byTitleOrdered = {};
+  Object.keys(index.byTitle)
+    .sort()
+    .forEach(function(key) {
+      byTitleOrdered[key] = index.byTitle[key];
+    });
+
+  index.byTitle = byTitleOrdered;
+  return index;
 };
 
 export default function createIndexesAsync(json) {

@@ -1,4 +1,5 @@
 import createIndexesAsync from '../utils/createIndexesAsync';
+import computePathAsync from '../utils/computePathAsync';
 
 export function fetchDataSuccess(indexes) {
   return {
@@ -16,6 +17,15 @@ export function fetchPending() {
 export function fetchError() {
   return {
     type: 'FETCH_FAIL'
+  };
+}
+
+export function pathCalculated(source, destination, path) {
+  return {
+    type: 'PATH_CALCULATED',
+    source,
+    destination,
+    path
   };
 }
 
@@ -44,9 +54,10 @@ export function fetchFilms() {
   };
 }
 
-export function addSearch(query) {
-  return {
-    type: 'ADD_SEARCH',
-    query
+export function computePath(index, source, destination) {
+  return dispatch => {
+    computePathAsync(index, source, destination).then(path =>
+      dispatch(pathCalculated(source, destination, path))
+    );
   };
 }
