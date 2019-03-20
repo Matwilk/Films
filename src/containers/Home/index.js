@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Select from 'react-virtualized-select';
@@ -57,56 +57,77 @@ export class Home extends Component {
     const { source, destination } = this.state;
 
     return (
-      <ReactPlaceholder
-        showLoadingAnimation
-        type="text"
-        rows={3}
-        ready={status === 'SUCCESS'}
-      >
-        {films.indexes && (
-          <Segment>
-            <Grid columns={2} stackable>
-              <Grid.Column>
-                <h3>Source movie</h3>
-                <Select
-                  searchable
-                  onChange={source =>
-                    this.setState({ source, destination: '' })
-                  }
-                  value={source || ''}
-                  options={Object.keys(films.indexes.byTitle).map(film => {
-                    return { label: film, value: film };
-                  })}
-                />
-              </Grid.Column>
-              <Grid.Column>
-                <h3>Destination movie</h3>
-                <Select
-                  searchable
-                  onChange={destination => this.setState({ destination })}
-                  value={destination || ''}
-                  options={Object.keys(films.indexes.byTitle).map(film => {
-                    return { label: film, value: film };
-                  })}
-                />
-              </Grid.Column>
-            </Grid>
-            <Divider vertical>To</Divider>
-          </Segment>
-        )}
-        {source &&
-          destination &&
-          queries[stringHash(`${source.value}:${destination.value}`)] && (
+      <Fragment>
+        <h1>Degrees of separation</h1>
+        <p>
+          Find how movies are related to one another by members of the cast.
+          Simply select a source and destination movie and see how the movies
+          are related
+        </p>
+        <ReactPlaceholder
+          showLoadingAnimation
+          type="text"
+          rows={5}
+          ready={status === 'SUCCESS'}
+        >
+          {films.indexes && (
             <Segment>
-              {queries[stringHash(`${source.value}:${destination.value}`)].map(
-                vertex => (
-                  <Message.Header>{vertex}</Message.Header>
-                )
-              )}
-              <Message.Header>{destination.value}</Message.Header>
+              <Grid columns={2} stackable>
+                <Grid.Column>
+                  <h3>Source</h3>
+                  <Select
+                    searchable
+                    onChange={source =>
+                      this.setState({ source, destination: '' })
+                    }
+                    value={source || ''}
+                    options={Object.keys(films.indexes.byTitle).map(film => {
+                      return { label: film, value: film };
+                    })}
+                  />
+                </Grid.Column>
+                <Grid.Column>
+                  <h3>Destination</h3>
+                  <Select
+                    searchable
+                    onChange={destination => this.setState({ destination })}
+                    value={destination || ''}
+                    options={Object.keys(films.indexes.byTitle).map(film => {
+                      return { label: film, value: film };
+                    })}
+                  />
+                </Grid.Column>
+              </Grid>
+              <Divider vertical>To</Divider>
             </Segment>
           )}
-      </ReactPlaceholder>
+          {source &&
+            destination &&
+            queries[stringHash(`${source.value}:${destination.value}`)] && (
+              <Fragment>
+                {queries[stringHash(`${source.value}:${destination.value}`)]
+                  .length ? (
+                  <Fragment>
+                    <p>
+                      Your movie relationship path is given below starting with
+                      the source movie and ending with the destination
+                    </p>
+                    <Segment>
+                      {queries[
+                        stringHash(`${source.value}:${destination.value}`)
+                      ].map(vertex => (
+                        <Message.Header>{vertex}</Message.Header>
+                      ))}
+                      <Message.Header>{destination.value}</Message.Header>
+                    </Segment>
+                  </Fragment>
+                ) : (
+                  <p>No path could be found :(</p>
+                )}
+              </Fragment>
+            )}
+        </ReactPlaceholder>
+      </Fragment>
     );
   }
 
