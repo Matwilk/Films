@@ -1,8 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-//import Select from 'react-select';
 import Select from 'react-virtualized-select';
+import ReactPlaceholder from 'react-placeholder';
+import { Segment, Grid } from 'semantic-ui-react';
 
 import stringHash from 'string-hash';
 
@@ -10,6 +11,8 @@ import { fetchFilms, computePath } from '../../actions';
 
 import 'react-select/dist/react-select.css';
 import 'react-virtualized-select/styles.css';
+import 'react-placeholder/lib/reactPlaceholder.css';
+
 import './Home.scss';
 
 export class Home extends Component {
@@ -34,6 +37,9 @@ export class Home extends Component {
     const { films } = this.props;
     const { source, destination, pathRequested } = this.state;
 
+    if ((!source || !destination) && pathRequested) {
+      this.setState({ pathRequested: false });
+    }
     if (source && destination && !pathRequested) {
       this.setState({ pathRequested: true });
       this.props.computePath(films.indexes, source.value, destination.value);
@@ -51,47 +57,52 @@ export class Home extends Component {
     const { source, destination } = this.state;
 
     return (
-      <Fragment>
-        {status}
-        {films.indexes && source && (
-          <div>{`You have selected source = ${source.value}`}</div>
+      <ReactPlaceholder
+        showLoadingAnimation
+        type="text"
+        rows={3}
+        ready={status === 'SUCCESS'}
+      >
+        {films.indexes && (
+          <Grid columns={2} stackable>
+            <Grid.Column>
+              <Segment>
+                <h3>Select a source movie</h3>
+                <Select
+                  searchable
+                  onChange={source =>
+                    this.setState({ source, destination: '' })
+                  }
+                  value={source || ''}
+                  options={Object.keys(films.indexes.byTitle).map(film => {
+                    return { label: film, value: film };
+                  })}
+                />
+              </Segment>
+            </Grid.Column>
+            <Grid.Column>
+              <Segment>
+                <h3>Select a destination movie</h3>
+                <Select
+                  searchable
+                  onChange={destination => this.setState({ destination })}
+                  value={destination || ''}
+                  options={Object.keys(films.indexes.byTitle).map(film => {
+                    return { label: film, value: film };
+                  })}
+                />
+              </Segment>
+            </Grid.Column>
+          </Grid>
         )}
-        {films.indexes && destination && (
-          <div>{`You have selected destination = ${destination.value}`}</div>
-        )}
-        {films.indexes &&
+        {source &&
+          destination &&
           queries[stringHash(`${source.value}:${destination.value}`)] && (
             <div>{`Path = ${
               queries[stringHash(`${source.value}:${destination.value}`)]
             }, ${destination.value}`}</div>
           )}
-        {films.indexes && !source && (
-          <Fragment>
-            <h3>Source</h3>
-            <Select
-              searchable
-              onChange={source => this.setState({ source, destination: '' })}
-              value={source}
-              options={Object.keys(films.indexes.byTitle).map(film => {
-                return { label: film, value: film };
-              })}
-            />
-          </Fragment>
-        )}
-        {films.indexes && source && !destination && (
-          <Fragment>
-            <h3>Destination</h3>
-            <Select
-              searchable
-              onChange={destination => this.setState({ destination })}
-              value={destination}
-              options={Object.keys(films.indexes.byTitle).map(film => {
-                return { label: film, value: film };
-              })}
-            />
-          </Fragment>
-        )}
-      </Fragment>
+      </ReactPlaceholder>
     );
   }
 
