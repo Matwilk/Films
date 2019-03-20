@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Select from 'react-virtualized-select';
 import ReactPlaceholder from 'react-placeholder';
-import { Segment, Grid } from 'semantic-ui-react';
+import { Segment, Grid, Message, Divider } from 'semantic-ui-react';
 
 import stringHash from 'string-hash';
 
@@ -64,10 +64,10 @@ export class Home extends Component {
         ready={status === 'SUCCESS'}
       >
         {films.indexes && (
-          <Grid columns={2} stackable>
-            <Grid.Column>
-              <Segment>
-                <h3>Select a source movie</h3>
+          <Segment>
+            <Grid columns={2} stackable>
+              <Grid.Column>
+                <h3>Source movie</h3>
                 <Select
                   searchable
                   onChange={source =>
@@ -78,11 +78,9 @@ export class Home extends Component {
                     return { label: film, value: film };
                   })}
                 />
-              </Segment>
-            </Grid.Column>
-            <Grid.Column>
-              <Segment>
-                <h3>Select a destination movie</h3>
+              </Grid.Column>
+              <Grid.Column>
+                <h3>Destination movie</h3>
                 <Select
                   searchable
                   onChange={destination => this.setState({ destination })}
@@ -91,16 +89,22 @@ export class Home extends Component {
                     return { label: film, value: film };
                   })}
                 />
-              </Segment>
-            </Grid.Column>
-          </Grid>
+              </Grid.Column>
+            </Grid>
+            <Divider vertical>To</Divider>
+          </Segment>
         )}
         {source &&
           destination &&
           queries[stringHash(`${source.value}:${destination.value}`)] && (
-            <div>{`Path = ${
-              queries[stringHash(`${source.value}:${destination.value}`)]
-            }, ${destination.value}`}</div>
+            <Segment>
+              {queries[stringHash(`${source.value}:${destination.value}`)].map(
+                vertex => (
+                  <Message.Header>{vertex}</Message.Header>
+                )
+              )}
+              <Message.Header>{destination.value}</Message.Header>
+            </Segment>
           )}
       </ReactPlaceholder>
     );
