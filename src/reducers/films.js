@@ -1,7 +1,7 @@
-const films = (state = [], action) => {
+const films = (state = {}, action) => {
   switch (action.type) {
     case 'FETCH_SUCCESS':
-      return Object.assign([], state, action.films);
+      return Object.assign({}, state, action.indexes);
     default:
       return state;
   }

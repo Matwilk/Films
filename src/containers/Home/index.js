@@ -8,7 +8,7 @@ import './Home.scss';
 
 export class Home extends Component {
   static propTypes = {
-    films: PropTypes.array,
+    films: PropTypes.object,
     status: PropTypes.string,
     fetchFilms: PropTypes.func.isRequired
   };

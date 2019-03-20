@@ -1,7 +1,9 @@
-export function fetchDataSuccess(films) {
+import createIndexesAsync from '../utils/createIndexesAsync';
+
+export function fetchDataSuccess(indexes) {
   return {
     type: 'FETCH_SUCCESS',
-    films
+    indexes
   };
 }
 
@@ -34,7 +36,8 @@ export function fetchFilms() {
         return response;
       })
       .then(response => response.json())
-      .then(films => dispatch(fetchDataSuccess(films)))
+      .then(films => createIndexesAsync(films))
+      .then(indexes => dispatch(fetchDataSuccess(indexes)))
       .catch(() => {
         dispatch(fetchError());
       });
