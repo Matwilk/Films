@@ -116,7 +116,7 @@ export class Home extends Component {
                       {queries[
                         stringHash(`${source.value}:${destination.value}`)
                       ].map(vertex => (
-                        <Message.Header>{vertex}</Message.Header>
+                        <Message.Header key={vertex}>{vertex}</Message.Header>
                       ))}
                       <Message.Header>{destination.value}</Message.Header>
                     </Segment>
