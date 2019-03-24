@@ -137,7 +137,7 @@ export class Home extends Component {
   }
 
   static defaultProps = {
-    films: []
+    films: {}
   };
 }
 
