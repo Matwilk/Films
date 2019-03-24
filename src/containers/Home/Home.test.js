@@ -30,13 +30,52 @@ describe('<Home />', () => {
     const source = { value: 'source' };
     const destination = { value: 'destination' };
     const queries = {
-      [stringHash(`${source.value}:${destination.value}`)]: [1, 2, 3, 4]
+      [stringHash(`${source.value}:${destination.value}`)]: [
+        'source',
+        'film2',
+        'film3',
+        'film4'
+      ]
     };
 
     const wrapper = mount(
       <Home {...props} status="SUCCESS" queries={queries} />
     );
     wrapper.setState({ source, destination });
-    expect(wrapper.find('Segment')).toHaveLength(5);
+    expect(
+      wrapper
+        .find('Segment')
+        .at(0)
+        .children()
+        .text()
+    ).toEqual('source');
+    expect(
+      wrapper
+        .find('Segment')
+        .at(1)
+        .children()
+        .text()
+    ).toEqual('film2');
+    expect(
+      wrapper
+        .find('Segment')
+        .at(2)
+        .children()
+        .text()
+    ).toEqual('film3');
+    expect(
+      wrapper
+        .find('Segment')
+        .at(3)
+        .children()
+        .text()
+    ).toEqual('film4');
+    expect(
+      wrapper
+        .find('Segment')
+        .at(4)
+        .children()
+        .text()
+    ).toEqual('destination');
   });
 });
