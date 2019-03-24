@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Select from 'react-virtualized-select';
 import ReactPlaceholder from 'react-placeholder';
-import { Segment, Grid, Message, Divider } from 'semantic-ui-react';
+import { Segment, Grid, Divider } from 'semantic-ui-react';
 
 import stringHash from 'string-hash';
 
@@ -29,20 +29,20 @@ export class Home extends Component {
 
     this.state = {
       source: '',
-      destination: '',
-      pathRequested: false
+      destination: ''
     };
   }
 
-  componentDidUpdate() {
-    const { films } = this.props;
-    const { source, destination, pathRequested } = this.state;
+  componentDidUpdate(prevProps, prevState) {
+    const { films, queries } = this.props;
+    const { source, destination } = this.state;
 
-    if ((!source || !destination) && pathRequested) {
-      this.setState({ pathRequested: false });
-    }
-    if (source && destination && !pathRequested) {
-      this.setState({ pathRequested: true });
+    if (
+      source &&
+      destination &&
+      (source !== prevState.source || destination !== prevState.destination) &&
+      !queries[stringHash(`${source.value}:${destination.value}`)]
+    ) {
       this.props.computePath(films.indexes, source.value, destination.value);
     }
   }
@@ -56,8 +56,6 @@ export class Home extends Component {
   render() {
     const { films, status, queries } = this.props;
     const { source, destination } = this.state;
-
-    console.log('quer', queries);
 
     return (
       <Fragment>
