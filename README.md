@@ -1,68 +1,47 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Film degrees of separation
 
-## Available Scripts
+## Installation
 
 In the project directory, you can run:
 
-### `npm start`
+### `yarn install`
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## To Run
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+To spin up:
 
-### `npm test`
+### `yarn start`
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Test
 
-### `npm run build`
+To test:
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### `yarn test`
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+# Implementation notes
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Computing path
 
-### `npm run eject`
+- Computing of path between source and destination movies is based on a Breadth First Search. However, the challenge brings the added complexity that a given movie is not linked directly to other films but, instead, linked to their actors who in turn have performed in 0 or more other films
+- Given the above added complexity, it was deemed performant to build an index of actors to the films they've performed so this can be used whenever looking up associated films when during a query. While building this index it was found to also be useful to build an index of film title to their film objects as the film data isn't keyed. This building of these indexes is performed as soon as the raw film data have been retrieved
+- The path calculation utilises a queue of film nodes being visited and an array of already-visited film nodes (so as not to revisit those nodes). For each entry on the queue a path is associated with it, being the path travelled to get to that point.
+- Once the destination is found (if indeed a path exists) then the algorithm can return success along with the path.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## The React/Redux App
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- On startup the app performs a thunk to fetch the film data and then build the indexes. This is pretty quick, but a placeholder is still displayed while the thunk completes. The films indexes are then put in the Redux store.
+- Additionally, an entry is placed in the Redux store to reflect the current state of the fetch (pending, success, fail)
+- On success, the films are now presented in a source and destination select box. Note that due to the sheer number of films a typical select was never going to cope. I used react-virtualized-select to handle this and it works pretty well, though a bespoke solution might handle this even better.
+- On selecting two films another thunk is triggered to asynchronously perform the path computation. Once the result is received it can then be displayed - or a message to indicate that no path was found.
+- Each query is stored in the Redux store and keyed of a hash built from the source and destination strings. That way if someone selects the same combination, then it can retrieve the stored value rather than recalculate
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## General Assumptions
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- Due to CORS, the fetch must go via a proxy. To achieve this, I have sent requests via a public proxy (https://cors-anywhere.herokuapp.com). In reality if this was a live site, it would need a dedicated proxy.
+- It's assumed that the raw film data returned from the fetch will not change regularly. Therefore it can be fetched when the app starts and, as such, no checks for updates are needed while using the app.
+- For styling I decided to use a framework (Semantic UI) as this was more than adequate to provide a responsive solution. However, if required I can strip out and write a in pure css. Please let me know.
 
-## Learn More
+## Not yet complete
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- More unit tests to give more coverage.
+- I haven't written jsdoc documentation.
