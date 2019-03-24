@@ -64,8 +64,8 @@ export function fetchFilms() {
 
 export function computePath(index, source, destination) {
   return dispatch => {
-    computePathAsync(index, source, destination).then(path =>
-      dispatch(pathCalculated(source, destination, path))
-    );
+    return computePathAsync(index, source, destination).then(path => {
+      dispatch(pathCalculated(source, destination, path));
+    });
   };
 }
