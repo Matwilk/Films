@@ -1,0 +1,15 @@
+.down {
+  height: 36px;
+}
+
+.ui.vertical.divider {
+  @media only screen and (max-width: 768px) {
+    &::before {
+      display: none;
+    }
+
+    &::after {
+      display: none;
+    }
+  }
+}

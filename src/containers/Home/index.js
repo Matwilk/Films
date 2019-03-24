@@ -14,6 +14,7 @@ import 'react-virtualized-select/styles.css';
 import 'react-placeholder/lib/reactPlaceholder.css';
 
 import './Home.scss';
+import down from './angle-down.svg';
 
 export class Home extends Component {
   static propTypes = {
@@ -56,6 +57,8 @@ export class Home extends Component {
     const { films, status, queries } = this.props;
     const { source, destination } = this.state;
 
+    console.log('quer', queries);
+
     return (
       <Fragment>
         <h1>Degrees of separation</h1>
@@ -68,8 +71,11 @@ export class Home extends Component {
           showLoadingAnimation
           type="text"
           rows={5}
-          ready={status === 'SUCCESS'}
+          ready={status === 'SUCCESS' || status === 'FAILED'}
         >
+          {status === 'FAILED' && (
+            <p>Failed to load films. Check connection and trying again.</p>
+          )}
           {films.indexes && (
             <Segment>
               <Grid columns={2} stackable>
@@ -108,21 +114,22 @@ export class Home extends Component {
                 {queries[stringHash(`${source.value}:${destination.value}`)]
                   .length ? (
                   <Fragment>
-                    <p>
+                    <h4>
                       Your movie relationship path is given below starting with
                       the source movie and ending with the destination
-                    </p>
-                    <Segment>
-                      {queries[
-                        stringHash(`${source.value}:${destination.value}`)
-                      ].map(vertex => (
-                        <Message.Header key={vertex}>{vertex}</Message.Header>
-                      ))}
-                      <Message.Header>{destination.value}</Message.Header>
-                    </Segment>
+                    </h4>
+                    {queries[
+                      stringHash(`${source.value}:${destination.value}`)
+                    ].map(vertex => (
+                      <Fragment key={vertex}>
+                        <Segment>{vertex}</Segment>
+                        <img className={'down'} src={down} alt="down" />
+                      </Fragment>
+                    ))}
+                    <Segment>{destination.value}</Segment>
                   </Fragment>
                 ) : (
-                  <p>No path could be found :(</p>
+                  <h4>No path could be found :(</h4>
                 )}
               </Fragment>
             )}
