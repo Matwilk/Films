@@ -1,5 +1,5 @@
-import createIndexesAsync from './createIndexesAsync';
-import { films, indexes } from './fixtures';
+import createIndexesAsync from '.';
+import { films, indexes } from '../fixtures';
 
 describe('computeIndexAsync function', () => {
   it('should create indexes from film json', () => {

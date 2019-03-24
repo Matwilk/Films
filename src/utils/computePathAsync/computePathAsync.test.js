@@ -1,5 +1,5 @@
-import computePathAsync from './computePathAsync';
-import { indexes } from './fixtures';
+import computePathAsync from '.';
+import { indexes } from '../fixtures';
 
 describe('computePathAsync function', () => {
   const source = "Abraham Lincoln's Clemency";

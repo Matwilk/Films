@@ -1,5 +1,5 @@
-import createIndexesAsync from '../utils/createIndexesAsync';
-import computePathAsync from '../utils/computePathAsync';
+import createIndexesAsync from '../utils/createIndexesAsync/.';
+import computePathAsync from '../utils/computePathAsync/.';
 
 export function fetchDataSuccess(indexes) {
   return {
