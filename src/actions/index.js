@@ -1,3 +1,5 @@
+import 'whatwg-fetch';
+
 import createIndexesAsync from '../utils/createIndexesAsync/.';
 import computePathAsync from '../utils/computePathAsync/.';
 
@@ -37,7 +39,7 @@ export function fetchFilms() {
 
     dispatch(fetchPending());
 
-    fetch(proxy + url)
+    return fetch(proxy + url)
       .then(response => {
         if (!response.ok) {
           throw Error(response.statusText);
