@@ -39,7 +39,7 @@ To test:
 
 - Due to CORS, the fetch must go via a proxy. To achieve this, I have sent requests via a public proxy (https://cors-anywhere.herokuapp.com). In reality if this was a live site, it would need a dedicated proxy.
 - It's assumed that the raw film data returned from the fetch will not change regularly. Therefore it can be fetched when the app starts and, as such, no checks for updates are needed while using the app.
-- For styling I decided to use a framework (Semantic UI) as this was more than adequate to provide a responsive solution. However, if required I can strip out and write a in pure css. Please let me know.
+- For styling I decided to use a framework (Semantic UI) as this was more than adequate to provide a responsive solution - albeit with a few small tweaks. However, if required I can strip out and write a in pure css. Please let me know.
 
 ## Not yet complete
 
