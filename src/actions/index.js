@@ -2,29 +2,35 @@ import 'whatwg-fetch';
 
 import createIndexesAsync from '../utils/createIndexesAsync/.';
 import computePathAsync from '../utils/computePathAsync/.';
+import {
+  FETCH_SUCCESS,
+  FETCH_PENDING,
+  FETCH_FAIL,
+  PATH_CALCULATED
+} from './types';
 
 export function fetchDataSuccess(indexes) {
   return {
-    type: 'FETCH_SUCCESS',
+    type: FETCH_SUCCESS,
     indexes
   };
 }
 
 export function fetchPending() {
   return {
-    type: 'FETCH_PENDING'
+    type: FETCH_PENDING
   };
 }
 
 export function fetchError() {
   return {
-    type: 'FETCH_FAIL'
+    type: FETCH_FAIL
   };
 }
 
 export function pathCalculated(source, destination, path) {
   return {
-    type: 'PATH_CALCULATED',
+    type: PATH_CALCULATED,
     source,
     destination,
     path

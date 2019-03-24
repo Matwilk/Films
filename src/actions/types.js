@@ -1,0 +1,4 @@
+export const FETCH_SUCCESS = 'FETCH_SUCCESS';
+export const FETCH_PENDING = 'FETCH_PENDING';
+export const FETCH_FAIL = 'FETCH_FAIL';
+export const PATH_CALCULATED = 'PATH_CALCULATED';
